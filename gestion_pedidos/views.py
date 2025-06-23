@@ -101,7 +101,7 @@ def ver_pedido_empleados(request, pedido_id):
             pedido.estado = nuevo_estado
             pedido.save()
             messages.success(request, "Estado actualizado correctamente.")
-            return redirect('ver_pedido', pedido_id=pedido.id)
+            return redirect('ver_pedido_empleados', pedido_id=pedido.id)
 
     return render(request, 'pedido_empleados.html', {
         'empleado': empleado,

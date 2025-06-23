@@ -3,7 +3,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Categoría - Morita</title>
+    <title>Editar Presentacion - Morita</title>
     <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
     <link rel="stylesheet" href="{% static 'gestion_productos/gestion_productos.css' %}">
 </head>
@@ -13,7 +13,7 @@
         <div class="brand">Morita</div>
         <nav>
             <a href="{% url 'prinAdmins'%}">Dashboard</a>
-            <a href="{% url 'gestProductos'%}">Productos</a>
+            <a class="active" href="{% url 'gestProductos'%}">Productos</a>
             <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
             <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
             <a href="{% url 'gestEmpleados'%}">Empleados</a>
@@ -29,10 +29,10 @@
     </aside>
     <main>
         <header>
-            <h1>Editar Categoría: {{ categoria_editar.nombre }}</h1>
+            <h1>Editar Presentacion: {{ presentacion_editar.nombre }}</h1>
             <ul class="tabs">
-                <li><a href="{% url 'gestCategorias' %}">Lista</a></li>
-                <li><a href="{% url 'nuevaCategoria' %}">Agregar</a></li>
+                <li><a href="{% url 'gestPresentacion' %}">Lista</a></li>
+                <li><a href="{% url 'nuevaPresentacion' %}">Agregar</a></li>
             </ul>
         </header>
 
@@ -42,14 +42,14 @@
 
                 <!-- Campo del formulario de Categoría -->
                 <div class="form-group">
-                    <label for="id_nombre">Nombre de la Categoría</label>
-                    {{ formCategoria.nombre }}
-                    {{ formCategoria.nombre.errors }}
+                    <label for="id_nombre">Nombre de la Presentacion</label>
+                    {{ formPresentacion.nombre }}
+                    {{ formPresentacion.nombre.errors }}
                 </div>
 
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">Guardar Cambios</button>
-                    <a href="{% url 'gestCategorias' %}" class="btn-secondary">Cancelar</a>
+                    <a href="{% url 'gestPresentacion' %}" class="btn-secondary">Cancelar</a>
                 </div>
             </form>
         </section>

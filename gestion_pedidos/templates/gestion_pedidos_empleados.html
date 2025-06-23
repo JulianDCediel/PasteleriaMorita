@@ -64,7 +64,7 @@
                 <td>{{ pedido.get_estado_display }}</td>
                 <td>${{ pedido.total }}</td>
                 <td>
-                    <a href="{% url 'ver_pedido' pedido.id %}" class="btn btn-sm">Ver</a>
+                    <a href="{% url 'ver_pedido_empleados' pedido.id %}" class="btn btn-sm">Ver</a>
                 </td>
             </tr>
             {% empty %}
