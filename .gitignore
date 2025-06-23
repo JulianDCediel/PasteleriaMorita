@@ -32,10 +32,6 @@ __pycache__/
 *.pot
 *.mo
 
-# Archivos estáticos recolectados por collectstatic
-/staticfiles/
-/static/
-
 # Archivos subidos por usuarios (media)
 media/
 

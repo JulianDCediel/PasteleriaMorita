@@ -1,0 +1,226 @@
+/* --- MODAL PRODUCTO --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center; /* Esto debería centrarlo verticalmente */
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: auto;
+    max-height: 90vh;
+    animation: modalopen 0.3s ease-out;
+    margin: auto;
+    /* Añade estas propiedades para centrado absoluto */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 1;
+}
+
+.close-modal:hover {
+    color: #ff0000;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    margin-top: 10px;
+}
+
+.modal-image {
+    flex: 0 0 40%;
+    max-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-image img {
+    width: 100%;
+    border-radius: 8px;
+    height: auto;
+    object-fit: cover;
+    max-height: 300px;
+}
+
+.modal-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Estilos para los elementos del formulario */
+.modal-details label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: -10px;
+}
+
+.modal-presentacion, .modal-indicaciones {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.modal-presentacion:focus,
+.modal-indicaciones:focus {
+    border-color: var(--rosa-principal);
+    outline: none;
+}
+
+.modal-indicaciones {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Estilos para el control de cantidad */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    padding: 8px 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    -moz-appearance: textfield;
+    font-size: 16px;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.quantity-btn:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+}
+
+/* Estilo para el botón de comprar */
+.modal-btn-comprar {
+    padding: 12px 0;
+    background-color: var(--rosa-principal);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+    text-align: center;
+    width: 100%;
+}
+
+.modal-btn-comprar:hover {
+    background-color: var(--rosa-oscuro);
+}
+
+/* Efecto de hover para todos los elementos interactivos */
+button, select, textarea {
+    transition: all 0.2s ease;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px 15px;
+    }
+
+    .modal-body {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .modal-image {
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .close-modal {
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        max-height: 85vh;
+    }
+
+    .quantity-control {
+        justify-content: center;
+    }
+
+    .modal-btn-comprar {
+        padding: 15px 0;
+    }
+}

@@ -1,0 +1,82 @@
+/.order-history {
+    max-width: 900px;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: #fff8fb;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.order-history h2 {
+    text-align: center;
+    color: #e45c88;
+    font-family: 'Dancing Script', cursive;
+    margin-bottom: 30px;
+}
+
+.order-card {
+    border: 1px solid #f3dce2;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-status {
+    padding: 4px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.order-status.pagado {
+    background-color: #d1f5d3;
+    color: #2e7d32;
+}
+
+.order-status.en_camino {
+    background-color: #fff8c2;
+    color: #ff8f00;
+}
+
+.order-status.finalizado {
+    background-color: #c2e2ff;
+    color: #1565c0;
+}
+
+.order-items ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.order-items li {
+    padding: 6px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.no-orders {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+.btn-review {
+    background-color: #e45c88;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.btn-review:hover {
+    background-color: #c94472;
+}

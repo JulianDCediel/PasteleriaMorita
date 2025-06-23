@@ -1,0 +1,160 @@
+/* Estilos generales del contenedor principal */
+main {
+    padding: 2rem;
+    background-color: #f9f5f6;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Título principal */
+header h1 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0d8df;
+}
+
+/* Filtro de búsqueda y estado */
+.filters form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.filters input[type="text"],
+.filters select {
+    padding: 12px 15px;
+    border: 1px solid #e0c8d1;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+    min-width: 200px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filters input[type="text"]:focus,
+.filters select:focus {
+    outline: none;
+    border-color: #e45c88;
+    box-shadow: 0 0 0 3px rgba(228, 92, 136, 0.2);
+}
+
+.filters button {
+    background-color: #ff1fa8   ;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filters button:hover {
+    background-color: #d24e79;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tabla de pedidos */
+.orders-list {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.orders-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders-list th, .orders-list td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f0e6ea;
+}
+
+.orders-list th {
+    background-color: #f7e9ed;
+    color: #5a3d4a;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.orders-list tr:last-child td {
+    border-bottom: none;
+}
+
+.orders-list tr:hover {
+    background-color: #fef5f8;
+}
+
+.orders-list td {
+    color: #5a3d4a;
+    vertical-align: middle;
+}
+
+/* Estado del pedido con colores */
+.orders-list td:nth-child(4) {
+    font-weight: 500;
+}
+
+.orders-list tr td:nth-child(4)[data-estado="pendiente"] {
+    color: #e67e22;
+}
+
+.orders-list tr td:nth-child(4)[data-estado="pagado"] {
+    color: #3498db;
+}
+
+.orders-list tr td:nth-child(4)[data-estado="en_camino"] {
+    color: #f39c12;
+}
+
+.orders-list tr td:nth-child(4)[data-estado="entregado"] {
+    color: #27ae60;
+}
+
+/* Botones de acciones */
+.orders-list .btn {
+    background-color: #ff1fa8;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-block;
+    text-align: center;
+    min-width: 70px;
+    width: 80%;
+}
+
+.orders-list .btn:hover {
+    background-color: #c94472;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensaje cuando no hay pedidos */
+.orders-list tr td[colspan="6"] {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+    font-style: italic;
+}
+
+/* Efectos de transición para suavizar interacciones */
+tr, .btn, button {
+    transition: all 0.3s ease;
+}

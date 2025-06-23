@@ -1,0 +1,248 @@
+/* Estilos específicos para la página Nosotros */
+
+/* Hero Section */
+.about-hero {
+    height: 60vh;
+    background: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,133,162,0.7), rgba(231,84,128,0.7));
+}
+
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    max-width: 800px;
+    padding: 0 20px;
+}
+.about-hero .hero-content h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.about-hero .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+/* Contenedor principal */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Secciones */
+.about-section {
+    margin-bottom: 80px;
+}
+
+.about-section h2 {
+    font-family: 'Dancing Script', cursive;
+    color: #e75480;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.about-section h2::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background-color: #ffb7c5;
+    margin: 15px auto 0;
+}
+
+/* Sección de Historia */
+.history-section .section-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.history-section .text-content {
+    flex: 1;
+}
+
+.history-section .text-content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #5a3e36;
+}
+
+.history-section .image-content {
+    flex: 1;
+}
+
+.history-section .image-content img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Sección Misión y Visión */
+.mission-vision {
+    background-color: #fff9fb;
+    padding: 60px 0;
+}
+
+.mv-container {
+    display: flex;
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mission, .vision {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.mission .icon, .vision .icon {
+    font-size: 2.5rem;
+    color: #ff85a2;
+    margin-bottom: 20px;
+}
+
+.mission h3, .vision h3 {
+    color: #e75480;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+.mission p, .vision p {
+    color: #5a3e36;
+    line-height: 1.6;
+}
+
+/* Sección de Valores */
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.value-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #fff4f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #e75480;
+    font-size: 2rem;
+}
+
+.value-card h3 {
+    color: #5a3e36;
+    margin-bottom: 15px;
+}
+
+.value-card p {
+    color: #7a6a5f;
+    line-height: 1.5;
+}
+
+/* Sección del Equipo */
+.team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.team-card {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.team-photo {
+    width: 40%;
+}
+
+.team-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-info {
+    width: 60%;
+    padding: 30px;
+}
+
+.team-info h3 {
+    color: #e75480;
+    margin-bottom: 5px;
+    font-size: 1.5rem;
+}
+
+.team-info .position {
+    color: #ff85a2;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.team-info .bio {
+    color: #5a3e36;
+    line-height: 1.6;
+}
+
+/* Sección CTA */
+.cta-section {
+    background: linear-gradient(135deg, #ff85a2, #e75480);
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+    border-radius: 10px;
+}
+
+.cta-content h2 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font

@@ -1,0 +1,66 @@
+/* Estilo del contenedor principal */
+main {
+    padding: 2rem;
+    background-color: #fdf8f9;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Información del pedido */
+.pedido-detalle h2 {
+    font-size: 1.8rem;
+    color: #e45c88;
+    margin-bottom: 1rem;
+}
+
+.pedido-detalle p {
+    margin: 6px 0;
+    color: #555;
+}
+
+/* Select de cambio de estado */
+.pedido-detalle form {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.pedido-detalle select {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+.pedido-detalle button {
+    padding: 8px 18px;
+    background-color: #e45c88;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.pedido-detalle button:hover {
+    background-color: #c94472;
+}
+
+/* Lista de productos */
+.pedido-detalle ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.pedido-detalle li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.pedido-detalle em {
+    display: block;
+    font-size: 0.9rem;
+    color: #777;
+}

@@ -1,0 +1,118 @@
+/* Fondo del modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Contenido del modal */
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    display: flex;
+    gap: 20px;
+    animation: fadeIn 0.4s ease;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Cierre del modal */
+.close-modal {
+    position: absolute;
+    right: 25px;
+    top: 15px;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: #e45c88;
+}
+
+/* Imagen del producto */
+.modal-product-img {
+    width: 160px;
+    height: 160px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+/* Contenedor derecho (formulario) */
+.modal-review-info {
+    flex: 1;
+}
+
+.modal-review-info h3 {
+    color: #e45c88;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.modal-review-info label {
+    display: block;
+    font-weight: 600;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+.modal-review-info select,
+.modal-review-info textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    background-color: #fdf7f9;
+    transition: border 0.3s ease;
+}
+
+.modal-review-info textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.modal-review-info select:focus,
+.modal-review-info textarea:focus {
+    border-color: #e45c88;
+    outline: none;
+}
+
+.modal-review-info button {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #e45c88;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.modal-review-info button:hover {
+    background-color: #c94472;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,146 @@
+/* Fondo general de la página */
+body {
+    background: linear-gradient(to right, #ffe0ec, #fff5f9);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal del formulario */
+.password-reset-form {
+    max-width: 480px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Título del formulario */
+.password-reset-form .form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.password-reset-form .form-title h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.2rem;
+    color: #e45c88;
+    margin: 0;
+}
+
+.password-reset-form .form-title p {
+    font-size: 1rem;
+    color: #7a4a58;
+    margin-top: 8px;
+}
+
+/* Campos del formulario */
+.password-reset-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.password-reset-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #5a3c44;
+}
+
+.password-reset-form input[type="email"],
+.password-reset-form input[type="password"],
+.password-reset-form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0cfd4;
+    border-radius: 8px;
+    background-color: #fdf7f9;
+    font-size: 1rem;
+    transition: border 0.3s ease;
+}
+
+.password-reset-form input:focus {
+    outline: none;
+    border-color: #e45c88;
+}
+
+/* Botón de envío */
+.password-reset-form .form-group button,
+.password-reset-form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #e45c88;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.password-reset-form .form-group button:hover,
+.password-reset-form button[type="submit"]:hover {
+    background-color: #c94472;
+}
+
+/* Mensajes (éxito o error) */
+.password-reset-form .messages {
+    margin-bottom: 15px;
+}
+
+.password-reset-form .alert {
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.alert-success {
+    background-color: #eaf8f0;
+    color: #3c763d;
+    border: 1px solid #d6e9c6;
+}
+
+.alert-error,
+.alert-danger {
+    background-color: #fcebea;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+
+.password-reset-form .form-group .error-message {
+    font-size: 0.9rem;
+    color: #d9534f;
+    margin-top: 6px;
+}
+
+/* Pie del formulario */
+.password-reset-form .form-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.password-reset-form .form-footer a {
+    color: #e45c88;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.password-reset-form .form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
