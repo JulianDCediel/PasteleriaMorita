@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Producto - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_productos/gestion_productos.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a class="active" href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span><strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong></span>
+            <span><strong>{{ empleado.persona.correo }}</strong></span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+            <h1>Editar Producto: {{ form.instance.nombre }}</h1>
+            <ul class="tabs">
+                <li><a href="{% url 'gestProductos' %}">Lista</a></li>
+                <li><a href="{% url 'nuevoProducto' %}">Agregar</a></li>
+                <li><a href="{% url 'gestCategorias' %}">Categorías</a></li>
+                <li><a href="{% url 'gestPresentacion' %}">Presentaciones</a></li>
+            </ul>
+        </header>
+
+<section class="form-section">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Información básica del producto -->
+        <div class="form-group">
+            <label for="id_nombre">Nombre del Producto</label>
+            {{ form.nombre }}
+            <div class="error-container">{{ form.nombre.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_descripcion">Descripción</label>
+            {{ form.descripcion }}
+            <div class="error-container">{{ form.descripcion.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_categoria">Categoría</label>
+            {{ form.categoria }}
+            <div class="error-container">{{ form.categoria.errors }}</div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_imagen">Imagen del Producto</label>
+            {{ form.imagen }}
+            <div class="error-container">{{ form.imagen.errors }}</div>
+        </div>
+
+        <!-- SECCIÓN DE PRECIOS POR PRESENTACIÓN -->
+        <div class="precios-container">
+            <h3>Precios por Presentación</h3>
+            {{ formset.management_form }}
+
+            <div id="precios-forms">
+                {% for precio_form in formset %}
+                    <div class="precio-form">
+                        {{ precio_form.id }}  <!-- Campo oculto para el ID -->
+                        <div class="form-group">
+                            <label>Presentación:</label>
+                            {{ precio_form.presentacion }}
+                        </div>
+                        <div class="form-group">
+                            <label>Precio ($):</label>
+                            {{ precio_form.precio }}
+                        </div>
+                        <button
+                            type="button"
+                            onclick="handleDelete(this, {{ precio_form.instance.pk|default:'null' }})"
+                            class="btn-delete"
+                        >
+                            Eliminar
+                        </button>
+                        <input type="hidden" name="{{ precio_form.DELETE.html_name }}"
+                               id="{{ precio_form.DELETE.id_for_label }}"
+                               value="{% if precio_form.DELETE.value %}on{% endif %}">
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Botón para agregar nueva fila -->
+            <button
+                type="button"
+                onclick="addNewForm()"
+                class="btn-add"
+            >
+                Agregar otra presentación
+            </button>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar Cambios</button>
+            <a href="{% url 'gestProductos' %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+
+    <!-- Template oculto para nuevas filas -->
+    <div id="empty-form" style="display:none;">
+        <div class="precio-form">
+            {{ formset.empty_form.id }}
+            <div class="form-group">
+                <label>Presentación:</label>
+                {{ formset.empty_form.presentacion }}
+            </div>
+            <div class="form-group">
+                <label>Precio ($):</label>
+                {{ formset.empty_form.precio }}
+            </div>
+            <button
+                type="button"
+                onclick="this.parentNode.remove()"
+                class="btn-delete"
+            >
+                Eliminar
+            </button>
+            <input type="hidden" name="{{ formset.empty_form.DELETE.html_name }}"
+                   id="{{ formset.empty_form.DELETE.id_for_label }}" value="">
+        </div>
+    </div>
+</section>
+    </main>
+</div>
+
+<script>
+    // Función para agregar nuevas presentaciones
+    function addNewForm() {
+        const prefix = 'precios';
+        const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+
+        if (!totalForms) {
+            console.error('Error: No se encontró el campo TOTAL_FORMS.');
+            return;
+        }
+
+        const formCount = parseInt(totalForms.value);
+        const template = document.getElementById("empty-form").innerHTML;
+        const newFormHtml = template.replace(/__prefix__/g, formCount);
+
+        document.getElementById("precios-forms").insertAdjacentHTML("beforeend", newFormHtml);
+        totalForms.value = formCount + 1;
+    }
+
+    // Función para manejar la eliminación
+    function handleDelete(button, instanceId) {
+        const form = button.closest('.precio-form');
+        const deleteField = form.querySelector('input[name*="DELETE"]');
+
+        if (instanceId) {
+            // Para registros existentes: marcamos para borrado y ocultamos
+            deleteField.value = 'on';
+            form.style.display = 'none';
+        } else {
+            // Para nuevos registros: eliminamos directamente
+            form.remove();
+            updateFormIndices();
+        }
+    }
+
+    // Función para actualizar índices de formularios
+    function updateFormIndices() {
+        const totalForms = document.getElementById('id_precios-TOTAL_FORMS');
+        const forms = document.querySelectorAll('#precios-forms .precio-form');
+
+        forms.forEach((form, index) => {
+            form.querySelectorAll('input, select').forEach(input => {
+                const name = input.name.replace(/-\d+-/, `-${index}-`);
+                input.name = name;
+                input.id = `id_${name}`;
+            });
+        });
+
+        totalForms.value = forms.length;
+    }
+</script>
+</body>
+</html>

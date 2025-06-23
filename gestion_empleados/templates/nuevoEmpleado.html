@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados-Panel Administrativo - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_empleados/gestion_empleados.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a class="active" href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo }}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+            <h1>Gestión de Empleados</h1>
+            <ul class="tabs">
+                <li><a href="{% url 'gestEmpleados' %}">Lista</a></li>
+                <li class="active"><a href="{% url 'nuevoEmpleado' %}">Agregar</a></li>
+            </ul>
+        </header>
+
+        <section class="form-section">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Campos del formulario de Persona -->
+                <div class="form-group">
+                    <label for="id_nombre">Nombre</label>
+                    {{ persona_form.nombre }}
+                    {{ persona_form.nombre.errors }}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_primer_apellido">Primer Apellido</label>
+                        {{ persona_form.primer_apellido }}
+                        {{ persona_form.primer_apellido.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_segundo_apellido">Segundo Apellido</label>
+                        {{ persona_form.segundo_apellido }}
+                        {{ persona_form.segundo_apellido.errors }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_correo">Correo Electrónico</label>
+                    {{ persona_form.correo }}
+                    {{ persona_form.correo.errors }}
+                </div>
+
+                <!-- Campos del formulario de Empleado -->
+                <div class="form-group">
+                    <label for="id_tipo_usuario">Tipo de Usuario</label>
+                    {{ empleado_form.tipo_usuario }}
+                    {{ empleado_form.tipo_usuario.errors }}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_contraseña">Contraseña</label>
+                        {{ empleado_form.contraseña }}
+                        {{ empleado_form.contraseña.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_confirmar_contraseña">Confirmar Contraseña</label>
+                        {{ empleado_form.confirmar_contraseña }}
+                        {{ empleado_form.confirmar_contraseña.errors }}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <a href="{% url 'gestEmpleados' %}" class="btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

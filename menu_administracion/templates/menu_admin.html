@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Administrativo - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a class="active" href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+            <h1>Panel administrativo</h1>
+            <ul class="tabs">
+                <li class="active">Resumen</li>
+                <li><a href="{% url 'gestProductos'%}">Productos</a></li>
+                <li><a href="{% url 'gestion_pedidos'%}">Pedidos</a></li>
+                <li><a href="{% url 'gestion_finanzas'%}">Finanzas</a></li>
+                <li><a href="{% url 'gestEmpleados'%}">Empleados</a></li>
+            </ul>
+        </header>
+        <section class="summary">
+    <div class="card">
+        <p class="title">Pedidos hoy</p>
+        <h2>{{ pedidos_hoy }}</h2>
+        <small>Pedidos realizados</small>
+        <a href="{% url 'gestion_pedidos'%}" class="btn">Ver pedidos</a>
+    </div>
+    <div class="card">
+        <p class="title">Productos activos</p>
+        <h2>{{ productos_activos }}</h2>
+        <small>Productos en venta</small>
+        <a href="{% url 'gestProductos' %}" class="btn">Gestionar</a>
+    </div>
+    <div class="card">
+        <p class="title">Ingresos</p>
+        <h2>${{ ingresos_mes|floatformat:0 }}</h2>
+        <small>Ingresos del mes</small>
+        <a href="{% url 'gestion_finanzas'%}" class="btn">Ver finanzas</a>
+    </div>
+</section>
+           <section class="recent-orders">
+        <h3>Pedidos recientes</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos_recientes %}
+                <tr>
+                    <td>{{ pedido.cliente.persona.nombre }} {{ pedido.cliente.persona.primer_apellido }}</td>
+                    <td>#{{ pedido.id }}</td>
+                    <td>{{ pedido.fecha }}</td>
+                        <td>
+                            {% for detalle in pedido.detalles.all %}
+                                {{ detalle.producto.nombre }} - {{ detalle.presentacion.nombre }}
+                                (x{{ detalle.cantidad }}){% if not forloop.last %}<br>{% endif %}
+                            {% endfor %}
+                        </td>
+                    <td>${{ pedido.total }}</td>
+                    <td>{{ pedido.get_estado_display }}</td>
+                    <td><a href="{% url 'ver_pedido' pedido.id %}" class="btn-small">→</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay pedidos recientes.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+</body>
+</html>

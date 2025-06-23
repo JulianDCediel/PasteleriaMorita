@@ -1,0 +1,385 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - Morita Pastelería</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'carrito/carrito.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="logo">Morita</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                <li><a href="{% url 'nosotros'%}"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                <li><a href="{% url 'mi_cuenta' %}"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                <li>
+                    <a href="{% url 'carrito' %}" class="active"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                    <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="cart-hero">
+    <div class="hero-content">
+        <h1>Tu Carrito de Compras</h1>
+        <p>Revisa y personaliza tus dulces selecciones</p>
+    </div>
+</section>
+
+<!-- Contenido principal -->
+<main class="cart-container">
+    <!-- Sección de Productos en el Carrito -->
+    <section class="cart-items">
+        <h2><i class="fas fa-shopping-basket"></i> Tus Productos Seleccionados</h2>
+
+        <div class="cart-table">
+            <div class="cart-header">
+                <div class="header-item product">Producto</div>
+                <div class="header-item price">Precio Unitario</div>
+                <div class="header-item quantity">Cantidad</div>
+                <div class="header-item total">Subtotal</div>
+                <div class="header-item action">Acción</div>
+            </div>
+
+ {% for item in items %}
+<div class="cart-product" data-item-id="{{ item.precio_producto_id }}">
+    <div class="product-info">
+        <img src="{{ item.imagen }}" alt="{{ item.producto_nombre }}">
+        <div class="product-details">
+            <h3>{{ item.producto_nombre }}</h3>
+            <p>{{ item.presentacion_nombre }}</p>
+            {% if item.nota %}<p class="item-note">{{ item.nota }}</p>{% endif %}
+        </div>
+    </div>
+    <div class="product-price">${{ item.precio|floatformat:"0" }}</div>
+    <div class="product-quantity">
+        <button class="quantity-btn minus" onclick="updateQuantity({{ item.precio_producto_id }}, -1)"><i
+                class="fas fa-minus"></i></button>
+        <span class="quantity">{{ item.cantidad }}</span>
+        <button class="quantity-btn plus" onclick="updateQuantity({{ item.precio_producto_id }}, 1)"><i
+                class="fas fa-plus"></i></button>
+    </div>
+    <div class="product-total">${{ item.subtotal|floatformat:"0" }}</div>
+    <div class="product-action">
+        <button class="remove-btn" onclick="removeItem({{ item.precio_producto_id }})"><i class="fas fa-trash-alt"></i>
+        </button>
+    </div>
+</div>
+{% empty %}
+<div class="empty-cart">
+    <p>Tu carrito está vacío</p>
+    <a href="{% url 'pagProductos' %}" class="btn">Ir a comprar</a>
+</div>
+{% endfor %}
+        </div>
+
+        <div class="cart-actions">
+            <a href="{% url 'pagProductos' %}" class="continue-btn"><i class="fas fa-arrow-left"></i> Seguir
+                Comprando</a>
+            <button class="clear-btn"><i class="fas fa-broom"></i> Limpiar Carrito</button>
+        </div>
+    </section>
+
+    <!-- Sección de Resumen de Compra -->
+    <aside class="cart-summary">
+        <h2><i class="fas fa-receipt"></i> Resumen de Compra</h2>
+
+        <div class="summary-details">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>${{ subtotal|floatformat:"0" }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Envío:</span>
+                <span>$8,000</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total:</span>
+                <span>${{ total|floatformat:"0" }}</span>
+            </div>
+<form id="pago-form">
+    {% csrf_token %}
+    <div class="delivery-options">
+        <h3><i class="fas fa-truck"></i> Opciones de Entrega</h3>
+        <div class="delivery-option">
+            <input type="radio" id="delivery-home" name="delivery" value="domicilio" checked>
+            <label for="delivery-home">Entrega a domicilio (+$8,000)</label>
+        </div>
+        <div class="delivery-option">
+            <input type="radio" id="pickup-store" name="delivery" value="recoger">
+            <label for="pickup-store">Recoger en tienda (Gratis)</label>
+        </div>
+    </div>
+
+    <button type="button" id="pagar-btn" class="checkout-btn">Proceder al Pago</button>
+</form>
+            <div class="payment-methods">
+                <p><i class="fas fa-lock"></i> Pago seguro con:</p>
+                <div class="payment-icons">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </aside>
+</main>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>Morita</h3>
+            <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-column">
+            <h3>Enlaces</h3>
+            <ul>
+                <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <ul>
+                <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+            </ul>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script>
+
+function updateQuantity(itemId, delta) {
+    const quantityElement = document.querySelector(`.cart-product[data-item-id="${itemId}"] .quantity`);
+    const currentQuantity = parseInt(quantityElement.textContent);
+    const newQuantity = currentQuantity + delta;
+
+    if (newQuantity < 1) return;
+
+    fetch(`/carrito/actualizar/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: `cantidad=${newQuantity}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar cantidad en pantalla
+            quantityElement.textContent = newQuantity;
+
+            // Actualizar subtotal del producto
+            const productTotalElement = document.querySelector(`.cart-product[data-item-id="${itemId}"] .product-total`);
+            productTotalElement.textContent = `$${data.subtotal.toLocaleString()}`;
+
+            // Actualizar subtotal general (nuevo)
+            document.querySelector('.summary-row span:nth-child(2)').textContent = `$${data.cart_subtotal.toLocaleString()}`;
+
+            // Actualizar total general (llamando a la función updateTotal)
+            updateTotal();
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function removeItem(itemId) {
+    if (confirm('¿Estás seguro de eliminar este producto del carrito?')) {
+        fetch(`/carrito/eliminar/${itemId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Eliminar el producto del DOM
+                document.querySelector(`.cart-product[data-item-id="${itemId}"]`).remove();
+
+                // Actualizar contador
+                document.querySelectorAll('.cart-count').forEach(el => {
+                    el.textContent = data.cart_count;
+                });
+
+                // Actualizar subtotal general (nuevo)
+                document.querySelector('.summary-row span:nth-child(2)').textContent = `$${data.subtotal.toLocaleString()}`;
+
+                // Actualizar total general (llamando a la función updateTotal)
+                updateTotal();
+
+                // Si el carrito queda vacío
+                if (data.cart_count === 0) {
+                    document.querySelector('.cart-table').innerHTML = `
+                        <div class="empty-cart">
+                            <p>Tu carrito está vacío</p>
+                            <a href="{% url 'pagProductos' %}" class="btn">Ir a comprar</a>
+                        </div>
+                    `;
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+document.querySelector('.clear-btn').addEventListener('click', function() {
+    if (confirm('¿Estás seguro de vaciar el carrito?')) {
+        fetch('/carrito/limpiar/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Vaciar la tabla de productos
+                document.querySelector('.cart-table').innerHTML = `
+                    <div class="empty-cart">
+                        <p>Tu carrito está vacío</p>
+                        <a href="{% url 'pagProductos' %}" class="btn">Ir a comprar</a>
+                    </div>
+                `;
+
+                // Actualizar contador
+                document.querySelectorAll('.cart-count').forEach(el => {
+                    el.textContent = '0';
+                });
+
+                // Actualizar subtotal y total (llamando a la función updateTotal)
+                document.querySelector('.summary-row span:nth-child(2)').textContent = '$0';
+                updateTotal(); // Esto actualizará el envío y total final
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+});
+
+
+// Precio fijo del envío
+const ENVIO_COST = 8000;
+
+// Función para actualizar el total según opción de envío
+
+function updateTotal() {
+    // Obtener el subtotal como número
+    const subtotalText = document.querySelector('.summary-row span:nth-child(2)').textContent;
+    const subtotal = parseFloat(subtotalText.replace(/[^0-9]/g, '')) || 0;
+
+    // Elementos del DOM
+    const envioElement = document.querySelector('.summary-row:nth-child(2) span:nth-child(2)');
+    const totalElement = document.querySelector('.summary-row.total span:nth-child(2)');
+
+    // Determinar costo de envío
+    const deliveryOption = document.querySelector('input[name="delivery"]:checked').value;
+
+    if (deliveryOption === 'domicilio') {
+        const costoEnvio = 8000; // o usar ENVIO_COST si lo definiste
+        envioElement.textContent = `$${costoEnvio.toLocaleString()}`;
+        totalElement.textContent = `$${(subtotal + costoEnvio).toLocaleString()}`;
+    } else {
+        envioElement.textContent = '$0';
+        totalElement.textContent = `$${subtotal.toLocaleString()}`;
+    }
+}
+
+// Escuchar cambios en los radio buttons
+document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+    radio.addEventListener('change', updateTotal);
+});
+
+function iniciarPago() {
+    fetch("{% url 'iniciar_pago' %}")
+        .then(response => response.json())
+        .then(data => {
+            if (data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                alert("No se pudo iniciar el pago.");
+            }
+        })
+        .catch(error => {
+            console.error('Error al iniciar el pago:', error);
+            alert("Error al iniciar el pago.");
+        });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.getElementById('pagar-btn').addEventListener('click', async function () {
+    const metodoEnvio = document.querySelector('input[name="delivery"]:checked')?.value;
+
+    if (!metodoEnvio) {
+        alert("Selecciona un método de entrega");
+        return;
+    }
+
+    try {
+        const response = await fetch("{% url 'iniciar_pago' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ delivery: metodoEnvio }),
+        });
+
+        const data = await response.json();
+
+        if (data.init_point) {
+            window.location.href = data.init_point;
+        } else {
+            alert("No se pudo generar el enlace de pago");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Error al intentar iniciar el pago");
+    }
+});
+</script>
+</body>
+</html>

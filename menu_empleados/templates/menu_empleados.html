@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Empleados - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_empleados/menu_empleados.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a class="active" href="{% url 'prinEmps'%}">Dashboard</a>
+            <a href="{% url 'gestion_pedidos_empleados'%}">Pedidos</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+            <h1>Panel Empleados</h1>
+            <ul class="tabs">
+                <li class="active">Resumen</li>
+                <li><a href="{% url 'gestion_pedidos_empleados'%}">Pedidos</a></li>
+            </ul>
+        </header>
+        <section class="summary">
+    <div class="card">
+        <p class="title">Pedidos hoy</p>
+        <h2>{{ pedidos_hoy }}</h2>
+        <small>Pedidos realizados</small>
+        <a href="{% url 'gestion_pedidos_empleados'%}" class="btn">Ver pedidos</a>
+    </div>
+    <div class="card">
+        <p class="title">Ingresos</p>
+        <h2>${{ ingresos_mes|floatformat:0 }}</h2>
+        <small>Ingresos del mes</small>
+    </div>
+</section>
+           <section class="recent-orders">
+        <h3>Pedidos recientes</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos_recientes %}
+                <tr>
+                    <td>{{ pedido.cliente.persona.nombre }} {{ pedido.cliente.persona.primer_apellido }}</td>
+                    <td>#{{ pedido.id }}</td>
+                    <td>{{ pedido.fecha }}</td>
+                        <td>
+                            {% for detalle in pedido.detalles.all %}
+                                {{ detalle.producto.nombre }} - {{ detalle.presentacion.nombre }}
+                                (x{{ detalle.cantidad }}){% if not forloop.last %}<br>{% endif %}
+                            {% endfor %}
+                        </td>
+                    <td>${{ pedido.total }}</td>
+                    <td>{{ pedido.get_estado_display }}</td>
+                    <td><a href="{% url 'ver_pedido_empleados' pedido.id %}" class="btn-small">→</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay pedidos recientes.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+</body>

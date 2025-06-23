@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 11px;
+            color: #333;
+            margin: 40px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #e45c88;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+            color: #e45c88;
+        }
+
+        .header p {
+            margin: 2px 0;
+        }
+
+        .datos-cliente {
+            margin-bottom: 20px;
+        }
+
+        .datos-cliente strong {
+            color: #e45c88;
+        }
+
+        .detalle {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .detalle th {
+            background-color: #f5dce3;
+            color: #5a3c44;
+            padding: 8px;
+            border: 1px solid #e0cfd4;
+        }
+
+        .detalle td {
+            padding: 8px;
+            border: 1px solid #e0cfd4;
+            text-align: center;
+        }
+
+        .totales {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .totales p {
+            margin: 4px 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 10px;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Pastelería Morita</h1>
+        <p>Tel: 32235239779</p>
+        <p>Dirección: Conjunto Santa Maria Del Rincon, Soacha</p>
+    </div>
+
+    <div class="datos-cliente">
+        <p><strong>Factura No.:</strong> {{ pedido.id }}</p>
+        <p><strong>Fecha:</strong> {{ pedido.fecha|date:"d/m/Y H:i" }}</p>
+        <p><strong>Cliente:</strong> {{ pedido.cliente.persona.nombre }} {{ pedido.cliente.persona.primer_apellido }}</p>
+        <p><strong>Documento:</strong> {{ pedido.cliente.numero_documento }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+        <p><strong>Correo:</strong> {{ pedido.cliente.persona.correo }}</p>
+        <p><strong>Entrega:</strong> {{ pedido.get_metodo_entrega_display }}</p>
+        {% if pedido.metodo_entrega == "domicilio" %}
+        <p><strong>Dirección:</strong> {{ pedido.direccion_entrega }}</p>
+        {% endif %}
+    </div>
+
+    <table class="detalle">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Presentación</th>
+                <th>Cantidad</th>
+                <th>Valor Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in detalles %}
+        <tr>
+            <td>{{ d.producto.nombre }}</td>
+            <td>{{ d.presentacion.nombre }}</td>
+            <td>{{ d.cantidad }}</td>
+            <td>${{ d.precio_unitario }}</td>
+            <td><strong>${{ d.subtotal }}</strong></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="totales">
+        <p><strong>Costo de envío:</strong> ${{ pedido.costo_envio }}</p>
+        <p><strong>Total pagado:</strong> ${{ pedido.total }}</p>
+    </div>
+
+    <div class="footer">
+        <p>Gracias por tu compra ❤️</p>
+        <p>Este documento no tiene validez tributaria</p>
+    </div>
+
+</body>
+</html>

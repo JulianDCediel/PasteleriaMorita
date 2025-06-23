@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Morita Pastelería</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'recuperacion_clave/recuperacion_clave.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">Morita</div>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                    <li><a href="{% url 'mi_cuenta' %}"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                    <li>
+                        <a href="#"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                        <span class="cart-count">0</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="account-container">
+        <div class="password-reset-form">
+            <div class="form-card">
+                <h2><i class="fas fa-key"></i> Recuperar Contraseña</h2>
+                <p>Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_email">Correo electrónico</label>
+                        <input type="email" id="id_email" name="email" required
+                               placeholder="Ej: tunombre@example.com">
+                        {% if form.email.errors %}
+                            <div class="error-message">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Enviar Instrucciones
+                    </button>
+
+                    <div class="form-footer">
+                        <a href="{% url 'credenciales' %}" class="back-to-login">
+                            <i class="fas fa-arrow-left"></i> Volver al inicio de sesión
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Morita</h3>
+                <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/morita.pasteleria/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                    <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                    <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                    <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>

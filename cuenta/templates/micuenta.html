@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - Morita Pastelería</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'cuenta/micuenta.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">Morita</div>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                    <li><a href="{% url 'mi_cuenta' %}" class="active"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                    <li>
+                        <a href="{% url 'carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                        <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="account-container">
+        <div class="account-content">
+            <!-- Sección de bienvenida -->
+            <div class="welcome-section">
+                <h1><i class="fas fa-user-circle"></i> Mi Cuenta</h1>
+                <p>Bienvenido de nuevo, <span class="user-name">{{ cliente.persona.nombre }} {{ cliente.persona.primer_apellido }}</span></p>
+            </div>
+
+            <!-- Formulario de edición de datos -->
+            <div class="edit-form-section">
+                <h2><i class="fas fa-user-edit"></i> Mis Datos</h2>
+                <form id="editForm" method="POST">
+                    {% csrf_token %}
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                {% if 'edit' in message.tags %}
+                                    <div class="alert alert-{{ message.tags }}">
+                                        {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-nombre">Nombre</label>
+                            <input type="text" id="edit-nombre" name="nombre" value="{{ cliente.persona.nombre }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-primer-apellido">Primer Apellido</label>
+                            <input type="text" id="edit-primer-apellido" name="primer_apellido" value="{{ cliente.persona.primer_apellido }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-segundo-apellido">Segundo Apellido</label>
+                        <input type="text" id="edit-segundo-apellido" name="segundo_apellido" value="{{ cliente.persona.segundo_apellido|default_if_none:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-email">Correo electrónico</label>
+                        <input type="email" id="edit-email" name="correo" value="{{ cliente.persona.correo }}" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-documento">Número de Documento</label>
+                            <input type="text" id="edit-documento" name="numero_documento" value="{{ cliente.numero_documento }}" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-telefono">Teléfono</label>
+                            <input type="tel" id="edit-telefono" name="telefono" value="{{ cliente.telefono }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-departamento">Departamento</label>
+                        <select id="edit-departamento" name="departamento" required>
+                            <option value="">Seleccione un departamento</option>
+                            {% for depto in departamentos %}
+                                <option value="{{ depto.id }}"
+                                    {% if cliente.direccion.municipio.departamento.id == depto.id %}selected{% endif %}>
+                                    {{ depto.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-municipio">Municipio</label>
+                        <select id="edit-municipio" name="municipio" required>
+                            <option value="">Seleccione un municipio</option>
+                            {% for municipio in municipios %}
+                                <option value="{{ municipio.id }}"
+                                    {% if cliente.direccion.municipio.id == municipio.id %}selected{% endif %}>
+                                    {{ municipio.nombre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit-calle">Dirección (Calle)</label>
+                        <input type="text" id="edit-calle" name="calle" value="{{ cliente.direccion.calle }}" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-password">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                            <input type="password" id="edit-password" name="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-confirm-password">Confirmar Nueva Contraseña</label>
+                            <input type="password" id="edit-confirm-password" name="confirm_password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+
+            <!-- Tarjeta de historial de pedidos -->
+            <div class="orders-card" onclick="window.location.href='{% url 'historial_pedidos'%}'">
+                <div class="card-content">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Historial de Pedidos</h3>
+                    <p>Revisa tus pedidos anteriores y su estado</p>
+                    <span class="view-all">Ver todos <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Morita</h3>
+                <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/morita.pasteleria/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                    <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                    <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                    <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Script para cargar municipios según departamento seleccionado
+        document.getElementById('edit-departamento').addEventListener('change', function () {
+            const departamentoId = this.value;
+            const municipioSelect = document.getElementById('edit-municipio');
+
+            // Limpiar municipios anteriores
+            municipioSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
+
+            if (!departamentoId) return;
+
+            fetch(`/get_municipios/?departamento_id=${departamentoId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.municipios && data.municipios.length > 0) {
+                        data.municipios.forEach(muni => {
+                            const option = document.createElement('option');
+                            option.value = muni.id;
+                            option.textContent = muni.nombre;
+                            municipioSelect.appendChild(option);
+                        });
+                    } else {
+                        console.warn('No se recibieron municipios');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar municipios:', error);
+                    alert('Error al cargar municipios. Por favor recarga la página.');
+                });
+        });
+    </script>
+</body>
+</html>

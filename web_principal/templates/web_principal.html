@@ -1,0 +1,342 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morita - Pastelería Artesanal</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'web_productos/modal.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <div class="header-content">
+        <div class="logo">Morita</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                <li><a href="{% url 'nosotros'%}"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                <li><a href="{% url 'mi_cuenta' %}"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                <li>
+                    <a href="{% url 'carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                    <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Dulces Momentos</h1>
+        <p>Descubre los sabores más exquisitos hechos con amor y los mejores ingredientes</p>
+        <div>
+            <a href="{% url 'pagProductos'%}"class="btn btn-primary">Ver Productos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Categorías -->
+<section class="categories">
+    <div class="section-title">
+        <h2>Nuestras Categorías</h2>
+    </div>
+    <div class="category-grid">
+        {% for categoria in categorias %}
+        <div class="category-card">
+            <div class="category-img"
+                 style="background-image: url('{% if categoria.imagen %}{{ categoria.imagen.url }}{% else %}{% static 'img/default-product.jpg' %}{% endif %}');"></div>
+            <div class="category-info">
+                <h3>{{categoria.nombre }}</h3>
+                <p>Deliciosas creaciones para tus momentos especiales</p>
+                <a href="{% url 'pagProductos' %}?categoria={{ categoria.id }}" class="btn btn-primary">Explorar</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Productos Destacados -->
+<section class="featured">
+    <div class="section-title">
+        <h2>Nuestros Productos</h2>
+    </div>
+    <div class="featured-products">
+        {% for producto in productos %}
+        <div class="product-card">
+            <div class="product-img"
+                 style="background-image: url('{% if producto.imagen %}{{ producto.imagen.url }}{% else %}{% static 'img/default-product.jpg' %}{% endif %}');">
+            </div>
+            <div class="product-info">
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.descripcion}}</p>
+                <div class="product-meta">
+                    <span class="product-category">{{ producto.categoria.nombre }}</span><br>
+                {% if producto.calificacion_promedio %}
+                    <span class="product-rating">
+                        {% with promedio=producto.calificacion_promedio %}
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= promedio %}
+                            <i class="fas fa-star filled"></i>
+                        {% elif promedio|floatformat:1 >= forloop.counter0|add:"0.25" and promedio|floatformat:1 < forloop.counter0|add:"0.75" %}
+                            <i class="fas fa-star-half-alt filled"></i>
+                        {% else %}
+                            <i class="far fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+                        <span class="rating-value">({{ producto.calificacion_promedio }})</span>
+                    </span>
+                    {% else %}
+                        <span class="product-rating no-reviews">(Sin reseñas)</span>
+                    {% endif %}
+                    <div class="presentation-selector">
+                            <select class="presentation-select" id="presentation-{{ producto.id }}">
+                                {% for precio in producto.precios %}
+                                <option value="{{ precio.id }}"
+                                        data-precio="{{ precio.precio }}"
+                                        data-max="{{ precio.presentacion.max_cantidad }}">
+                                    {{ precio.presentacion.nombre }}: ${{ precio.precio }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                </div>
+                <button class="btn btn-primary" onclick="showProductModal({{ producto.id }}, document.getElementById('presentation-{{ producto.id }}').value)">Agregar al carrito </button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-products">
+            <p>No hay productos disponibles.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>Morita</h3>
+            <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/morita.pasteleria/"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        <div class="footer-column">
+            <h3>Enlaces</h3>
+            <ul>
+                <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Contacto</h3>
+            <ul>
+                <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+            </ul>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+    </div>
+</footer>
+<!-- Modal -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeProductModal()">&times;</span>
+        <div class="modal-body">
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="Producto">
+            </div>
+            <div class="modal-details">
+                <h3 id="modalTitle"></h3>
+
+                <label for="modalPresentation">Presentacion</label>
+                <select class= "modal-presentacion" id="modalPresentation"></select>
+
+                <label for="modalNote">Indicaciones especiales (opcional)</label>
+                <textarea class= "modal-indicaciones" id="modalNote" maxlength="120"></textarea>
+
+                <label for="modalCantidad">Cantidad</label>
+                <div class="quantity-control">
+                    <button class="quantity-btn" onclick="changeCantidad(-1)">-</button>
+                    <input id="modalCantidad" type="number" value="1" min="1" class="quantity-input">
+                    <button class="quantity-btn" onclick="changeCantidad(1)">+</button>
+                </div>
+
+                <button class="modal-btn-comprar" onclick="confirmCompra()">Comprar</button>
+            </div>
+        </div>
+    </div>
+</div>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.closest('.product-item').dataset.productId;
+            const selectId = `presentation-${productId}`;
+            const presentationSelect = document.getElementById(selectId);
+            const selectedPrecioId = presentationSelect.value;
+            showProductModal(productId, selectedPrecioId);
+        });
+    });
+});
+        const clienteAutenticado = {{ cliente_autenticado|yesno:"true,false" }};
+// Función para abrir el modal
+function showProductModal(productId, precioProductoId = null) {
+    const modal = document.getElementById("productModal");
+
+    // Resetear y mostrar el modal
+    modal.style.display = "block";
+    setTimeout(() => {
+        modal.classList.add("show");
+    }, 10);
+
+    // Configurar el contenido del modal
+    const producto = productosData.find(p => p.id === productId);
+    if (!producto) return;
+
+    document.getElementById("modalImage").src = producto.imagen;
+    document.getElementById("modalTitle").innerText = producto.nombre;
+
+    const presentationSelect = document.getElementById("modalPresentation");
+    presentationSelect.innerHTML = '';
+
+    producto.precios.forEach(p => {
+        let option = document.createElement("option");
+        option.value = p.id;
+        option.text = `${p.presentacion_nombre}: $${p.precio}`;
+        option.dataset.precio = p.precio;
+        if (precioProductoId && p.id == precioProductoId) {
+            option.selected = true;
+        }
+        presentationSelect.appendChild(option);
+    });
+
+    // Resetear otros campos
+    document.getElementById("modalNote").value = '';
+    document.getElementById("modalCantidad").value = 1;
+}
+
+// Función para cerrar el modal
+function closeProductModal() {
+    const modal = document.getElementById("productModal");
+    modal.classList.remove("show");
+
+    setTimeout(() => {
+        modal.style.display = "none";
+    }, 300);
+}
+
+function changeCantidad(delta) {
+    const cantidad = document.getElementById("modalCantidad");
+    cantidad.value = Math.max(1, parseInt(cantidad.value) + delta);
+}
+
+function confirmCompra() {
+if (!clienteAutenticado) {
+        window.location.href = "{% url 'credenciales' %}"; // Cambia por tu URL real
+        return;
+    }
+
+    const precioProductoId = document.getElementById("modalPresentation").value;
+    const cantidad = document.getElementById("modalCantidad").value;
+    const nota = document.getElementById("modalNote").value;
+
+    fetch("{% url 'agregar_al_carrito' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `precio_producto_id=${precioProductoId}&cantidad=${cantidad}&nota=${encodeURIComponent(nota)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualizar contador del carrito
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = data.cart_count;
+            });
+
+            showNotification('Producto añadido al carrito');
+            closeProductModal();
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error al comunicarse con el servidor.");
+    });
+}
+
+// En tu página principal
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment_status');
+
+    if (paymentStatus === 'approved') {
+        alert('¡Pago aprobado! Gracias por tu compra.');
+    } else if (paymentStatus === 'rejected') {
+        alert('Pago rechazado. Por favor intenta nuevamente.');
+    } else if (paymentStatus === 'pending') {
+        alert('Pago pendiente. Te notificaremos cuando se complete.');
+    }
+});
+
+const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('status') === 'approved') {
+        // Redirige a la URL de pago exitoso local para registrar el pedido
+        window.location.href = "/pago_exitoso/";
+    }
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
+}
+
+
+    </script>
+<script>
+    const productosData = [
+    {% for producto in productos %}
+    {
+        id: {{ producto.id }},
+        nombre: "{{ producto.nombre|escapejs }}",
+        imagen: "{% if producto.imagen %}{{ producto.imagen.url }}{% else %}{% static 'img/default-product.jpg' %}{% endif %}",
+        precios: [
+            {% for precio in producto.precioproducto_set.all %}
+            {
+                id: {{ precio.id }},
+                precio: {{ precio.precio }},
+                presentacion_nombre: "{{ precio.presentacion.nombre|escapejs }}"
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+
+
+
+];
+</script>
+</body>
+</html>

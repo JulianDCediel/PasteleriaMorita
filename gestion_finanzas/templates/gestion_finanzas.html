@@ -1,0 +1,315 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Finanzas—Panel Admin</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_finanzas/gestion_finanzas.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a class="active" href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="finance-dashboard">
+        <h2>Análisis Financiero</h2>
+
+        <!-- Filtros -->
+        <section class="filters">
+            <form method="GET">
+                <label for="mes">Mes:</label>
+                <select name="mes" id="mes">
+                    <option value="">Todos</option>
+                    {% for m in meses %}
+                        <option value="{{ m.0 }}" {% if m.0 == mes %}selected{% endif %}>{{ m.1 }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="año">Año:</label>
+                <select name="año" id="año">
+                    <option value="">Todos</option>
+                    {% for a in años %}
+                        <option value="{{ a }}" {% if a == año %}selected{% endif %}>{{ a }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" class="btn-filter">Aplicar Filtros</button>
+                <a href="{% url 'generar_informe_financiero' %}?{% if mes %}mes={{ mes }}&{% endif %}año={{ año }}" class="btn-export">
+    <i class="fas fa-file-pdf"></i> Generar PDF
+</a>
+
+            </form>
+        </section>
+
+        <!-- KPI Section -->
+        <section class="kpi-section">
+            <div class="kpi-card">
+                <p>Total Ingresos</p>
+                <h3>${{ total_ingresos|floatformat:0 }}</h3>
+                <div class="kpi-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 12% vs mes anterior
+                </div>
+            </div>
+            <div class="kpi-card">
+                <p>Pedidos Completados</p>
+                <h3>{{ total_pedidos }}</h3>
+                <div class="kpi-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> 8% vs mes anterior
+                </div>
+            </div>
+            <div class="kpi-card">
+                <p>Ticket Promedio</p>
+                <h3>${{ promedio|floatformat:0 }}</h3>
+                <div class="kpi-trend trend-neutral">
+                    <i class="fas fa-equals"></i> Similar a mes anterior
+                </div>
+            </div>
+            <div class="kpi-card">
+                <p>Clientes Recurrentes</p>
+                <h3>42%</h3>
+                <div class="kpi-trend trend-down">
+                    <i class="fas fa-arrow-down"></i> 5% vs mes anterior
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráfico de ingresos con comparativa -->
+        <section class="chart-container">
+            <div class="chart-header">
+                <h3>Evolución de Ingresos Mensuales</h3>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #e45c88;"></span>
+                        <span>{{ año }} (Actual)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #bdc3c7;"></span>
+                        <span>{{ año|add:"-1" }} (Anterior)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="graficoIngresos"></canvas>
+            </div>
+        </section>
+
+        <!-- Comparación año actual vs anterior -->
+        <section class="comparison-section">
+            <div class="comparison-card">
+                <h3>Top 5 Productos por Ingresos</h3>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Ingresos</th>
+                            <th>% Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos_top|slice:":5" %}
+                        <tr>
+                            <td>{{ producto.producto__nombre }}</td>
+                            <td>${{ producto.ingresos|floatformat:0 }}</td>
+                            <td>{{ producto.porcentaje|floatformat:2 }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="comparison-card">
+                <h3>Top 5 Presentaciones por Ingresos</h3>
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Presentación</th>
+                            <th>Ingresos</th>
+                            <th>% Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presentacion in presentaciones_top|slice:":5" %}
+                        <tr>
+                            <td>{{ presentacion.producto__nombre }} - {{ presentacion.presentacion__nombre }}</td>
+                            <td>${{ presentacion.ingresos|floatformat:0 }}</td>
+                            <td>{{ presentacion.porcentaje|floatformat:2 }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gráficos de productos -->
+        <section class="chart-container">
+            <h3>Distribución de Ingresos por Producto</h3>
+            <div class="chart-wrapper">
+                <canvas id="graficaProductos"></canvas>
+            </div>
+        </section>
+
+        <!-- Gráficos de presentaciones -->
+        <section class="chart-container">
+            <h3>Distribución de Ingresos por Presentación</h3>
+            <div class="chart-wrapper">
+                <canvas id="graficaPresentaciones"></canvas>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- JavaScript para gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Gráfico de ingresos mensuales con comparativa
+const ctxIngresos = document.getElementById('graficoIngresos');
+new Chart(ctxIngresos, {
+    type: 'line',
+    data: {
+        labels: {{ labels|safe }},
+        datasets: [
+            {
+                label: '{{ año }} (Actual)',
+                data: {{ datos|safe }},
+                backgroundColor: 'rgba(228, 92, 136, 0.2)',
+                borderColor: '#e45c88',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            },
+            {
+                label: '{{ año|add:"-1" }} (Anterior)',
+                data: {{ datos_anterior|safe }},
+                backgroundColor: 'rgba(189, 195, 199, 0.2)',
+                borderColor: '#bdc3c7',
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.dataset.label + ': $' + context.raw.toLocaleString();
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return '$' + value.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Gráfico de productos
+const ctxProductos = document.getElementById('graficaProductos');
+new Chart(ctxProductos, {
+    type: 'bar',
+    data: {
+        labels: {{ labels_productos|safe }},
+        datasets: [{
+            label: 'Ingresos por Producto',
+            data: {{ data_productos|safe }},
+            backgroundColor: '#e45c88',
+            borderColor: '#d44c78',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return '$' + context.raw.toLocaleString();
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return '$' + value.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Gráfico de presentaciones
+const ctxPresentaciones = document.getElementById('graficaPresentaciones');
+new Chart(ctxPresentaciones, {
+    type: 'doughnut',
+    data: {
+        labels: {{ labels_presentaciones|safe }},
+        datasets: [{
+            data: {{ data_presentaciones|safe }},
+            backgroundColor: [
+                '#e45c88', '#f8a5c2', '#f5cd79', '#a3de83', '#74b9ff',
+                '#dfe6e9', '#00cec9', '#fd79a8', '#6c5ce7', '#ffeaa7'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.raw || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = Math.round((value / total) * 100);
+                        return `${label}: $${value.toLocaleString()} (${percentage}%)`;
+                    }
+                }
+            },
+            legend: {
+                position: 'right',
+                labels: {
+                    boxWidth: 12
+                }
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>

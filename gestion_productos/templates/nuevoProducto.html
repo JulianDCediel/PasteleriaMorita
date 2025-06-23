@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos—Panel Admin</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_productos/gestion_productos.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a class="active" href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+            <h1>Agregar nuevo producto</h1>
+            <ul class="tabs">
+                <li><a href="{% url 'gestProductos' %}">Lista</a></li>
+                <li class="active">Agregar</li>
+                <li><a href="{% url 'gestCategorias' %}">Categorías</a></li>
+                <li><a href="{% url 'gestPresentacion' %}">Presentaciones</a></li>
+            </ul>
+        </header>
+        <section class="form-section">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Información básica del producto -->
+                <div class="form-group">
+                    <label for="id_nombre">Nombre del Producto</label>
+                    {{ form.nombre }}
+                    <div class="error-container">{{ form.nombre.errors }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_descripcion">Descripción</label>
+                    {{ form.descripcion }}
+                    <div class="error-container">{{ form.descripcion.errors }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_categoria">Categoría</label>
+                    {{ form.categoria }}
+                    <div class="error-container">{{ form.categoria.errors }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_imagen">Imagen del Producto</label>
+                    {{ form.imagen }}
+                    <div class="error-container">{{ form.imagen.errors }}</div>
+                </div>
+
+                   <!-- SECCIÓN DE PRECIOS POR PRESENTACIÓN -->
+    <div class="precios-container">
+        <h3>Precios por Presentación</h3>
+        {{ formset.management_form }}
+
+        <div id="precios-forms">
+            {% for precio_form in formset %}
+                <div class="precio-form">
+                    <div class="form-group">
+                        <label>Presentación:</label>
+                        {{ precio_form.presentacion }}
+                    </div>
+                    <div class="form-group">
+                        <label>Precio ($):</label>
+                        {{ precio_form.precio }}
+                    </div>
+                    <button
+                        type="button"
+                        name="delete_row"
+                        onclick="this.parentNode.remove()"
+                        class="btn-delete"
+                    >
+                        Eliminar
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Botón para agregar nueva fila (usa el empty_form del formset) -->
+        <button
+            type="button"
+            onclick="addNewForm()"
+            class="btn-add"
+        >
+            Agregar otra presentación
+        </button>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Guardar Producto</button>
+        <a href="{% url 'gestProductos' %}" class="btn-secondary">Cancelar</a>
+    </div>
+            </form>
+            <!-- Template oculto para nuevas filas (empty_form) -->
+<div id="empty-form" style="display:none;">
+    <div class="precio-form">
+        <div class="form-group">
+            <label>Presentación:</label>
+            {{ formset.empty_form.presentacion }}
+        </div>
+        <div class="form-group">
+            <label>Precio ($):</label>
+            {{ formset.empty_form.precio }}
+        </div>
+        <button
+            type="button"
+            name="delete_row"
+            onclick="this.parentNode.remove()"
+            class="btn-delete"
+        >
+            Eliminar
+        </button>
+    </div>
+</div>
+
+<!-- Script mínimo (sin jQuery) para agregar/eliminar filas -->
+<script>
+    function addNewForm() {
+        const prefix = 'precios';  // ¡DEBE COINCIDIR con el prefix de tu formset!
+        const totalForms = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+
+        if (!totalForms) {
+            console.error('Error: No se encontró el campo TOTAL_FORMS. Verifica el prefix del formset.');
+            return;
+        }
+
+        const formCount = parseInt(totalForms.value);
+        const template = document.getElementById("empty-form").innerHTML;
+        const newFormHtml = template.replace(/__prefix__/g, formCount);
+
+        document.getElementById("precios-forms").insertAdjacentHTML("beforeend", newFormHtml);
+        totalForms.value = formCount + 1;
+    }
+</script>
+        </section>
+    </main>
+</div>
+</body>
+</html>

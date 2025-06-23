@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Categorías-Panel Administrativo - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_empleados/gestion_empleados.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a class="active" href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a href="{% url 'gestEmpleados'%}">Empleados</a>
+
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo }}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+            <h1>Gestión de Categorías</h1>
+            <ul class="tabs">
+                <li><a href="{% url 'gestCategorias' %}">Lista</a></li>
+                <li class="active"><a href="{% url 'nuevaCategoria' %}">Agregar</a></li>
+            </ul>
+        </header>
+
+        <section class="form-section">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Campo único para categoría -->
+                <div class="form-group" enctype="multipart/form-data">
+                    <label for="id_nombre">Nombre de la Categoría</label>
+                    {{ formCategoria.nombre }}
+                    {{ formCategoria.nombre.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_imagen">Imagen de la Categoría</label>
+                    {{ formCategoria.imagen }}
+                    {{ formCategoria.imagen.errors }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <a href="{% url 'gestCategorias' %}" class="btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

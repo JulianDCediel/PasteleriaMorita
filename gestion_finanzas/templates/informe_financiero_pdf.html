@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe Financiero</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .summary {
+            margin: 20px 0;
+        }
+        .summary div {
+            margin: 8px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 6px;
+            text-align: left;
+        }
+        .grafica {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .grafica img {
+            width: 100%;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pastelería Morita</h1>
+    <h2>Informe Financiero</h2>
+    <p><strong>Año:</strong> {{ año }}{% if mes %} | <strong>Mes:</strong> {{ mes }}{% endif %}</p>
+
+    <div class="summary">
+        <div><strong>Total ingresos:</strong> ${{ ingresos|floatformat:"0" }}</div>
+        <div><strong>Total pedidos:</strong> {{ total_pedidos }}</div>
+        <div><strong>Ingreso promedio:</strong> ${{ ingreso_promedio|floatformat:"0" }}</div>
+    </div>
+
+    <h3>Pedidos Registrados</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr>
+                <td>{{ pedido.id }}</td>
+                <td>{{ pedido.cliente.persona.nombre }}</td>
+                <td>{{ pedido.fecha|date:"Y-m-d H:i" }}</td>
+                <td>${{ pedido.total|floatformat:"0" }}</td>
+                <td>{{ pedido.get_estado_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Comparación de Productos</h3>
+    <div class="grafica">
+        <img src="data:image/png;base64,{{ graph_productos }}">
+    </div>
+
+    <h3>Comparación de Presentaciones</h3>
+    <div class="grafica">
+        <img src="data:image/png;base64,{{ graph_presentaciones }}">
+    </div>
+</body>
+</html>

@@ -1,0 +1,362 @@
+/* Estilos específicos para la página de cuenta */
+.account-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.account-forms {
+    display: flex;
+    gap: 40px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.login-form, .register-form {
+    flex: 1;
+    padding: 40px;
+}
+
+.login-form {
+    background-color: #fff9fb;
+}
+
+.register-form {
+    background-color: white;
+}
+
+.form-divider {
+    position: relative;
+    width: 1px;
+    background-color: #eee;
+    margin: 40px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-divider span {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    color: var(--rosa-oscuro);
+    font-weight: 600;
+    position: absolute;
+}
+
+h2 {
+    color: var(--rosa-oscuro);
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--marron);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+select:focus {
+    border-color: var(--rosa-principal);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 133, 162, 0.2);
+}
+
+.forgot-password {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: var(--rosa-oscuro);
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+}
+
+.btn-primary {
+    background-color: var(--rosa-principal);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--rosa-oscuro);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 84, 128, 0.3);
+}
+
+.social-login {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.social-login p {
+    color: var(--marron);
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.social-login p::before,
+.social-login p::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 30%;
+    height: 1px;
+    background-color: #eee;
+}
+
+.social-login p::before {
+    left: 0;
+}
+
+.social-login p::after {
+    right: 0;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-social {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid #ddd;
+    background-color: white;
+    color: var(--marron);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-social.facebook {
+    color: #1877F2;
+    border-color: #1877F2;
+}
+
+.btn-social.facebook:hover {
+    background-color: #f0f4ff;
+}
+
+.btn-social.google {
+    color: #DB4437;
+    border-color: #DB4437;
+}
+
+.btn-social.google:hover {
+    background-color: #fff0ef;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    font-weight: 400;
+    font-size: 0.9rem;
+}
+
+.checkbox-group a {
+    color: var(--rosa-oscuro);
+    text-decoration: none;
+}
+
+.checkbox-group a:hover {
+    text-decoration: underline;
+}
+/* Estilos para mensajes de error */
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.error-message ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.non-field-errors {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 0.25rem;
+}
+
+/* Estilos para mensajes flash */
+.alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-error, .alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+/* Mejoras para los formularios */
+.account-forms {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .account-forms {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .login-form, .register-form {
+        flex: 1;
+        max-width: 500px;
+    }
+
+    .form-divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-divider span {
+        background: #fff;
+        padding: 0 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-divider::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 1px;
+        background: #ddd;
+    }
+}
+
+/* Mensajes de éxito/error generales */
+.alert {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .account-forms {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .login-form, .register-form {
+        padding: 30px 20px;
+    }
+
+    .form-divider {
+        width: 100%;
+        height: 1px;
+        margin: 0;
+    }
+
+    .form-divider span {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}

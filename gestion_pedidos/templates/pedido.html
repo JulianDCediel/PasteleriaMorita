@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos—Panel Admin</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_pedidos/pedido.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+                <a href="{% url 'prinAdmins'%}">Dashboard</a>
+                <a  href="{% url 'gestProductos'%}">Productos</a>
+                <a class="active" href="{% url 'gestion_pedidos'%}">Pedidos</a>
+                <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+                <a href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+
+    <main>
+        <header>
+
+            <h1>Gestión de pedidos</h1>
+    <section class="pedido-detalle">
+    <h2>Pedido #{{ pedido.id }}</h2>
+    <p><strong>Cliente:</strong> {{ pedido.cliente.persona.nombre }} {{ pedido.cliente.persona.primer_apellido }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.fecha|date:"Y-m-d H:i" }}</p>
+    <p><strong>Método de entrega:</strong> {{ pedido.get_metodo_entrega_display }}</p>
+    <p><strong>Total:</strong> ${{ pedido.total }}</p>
+    <p><strong>Estado actual:</strong> {{ pedido.get_estado_display }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="estado">Cambiar estado:</label>
+        <select name="estado">
+            {% for value, label in estados %}
+        <option value="{{ value }}" {% if pedido.estado == value %}selected{% endif %}>{{ label }}</option>
+             {% endfor %}
+        </select>
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <h3>Productos del pedido:</h3>
+    <ul>
+        {% for detalle in pedido.detalles.all %}
+        <li>
+            {{ detalle.producto.nombre }} - {{ detalle.presentacion.nombre }}
+            (x{{ detalle.cantidad }}) - ${{ detalle.precio_unitario }}<br>
+            {% if detalle.nota %}<em>Nota: {{ detalle.nota }}</em>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+        </header>
+
+
+    </main>
+</div>
+</body>
+</html>

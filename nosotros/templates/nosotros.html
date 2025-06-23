@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Morita Pastelería</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'nosotros/nosotros.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">Morita</div>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}" class="active"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                    <li><a href="{% url 'mi_cuenta' %}"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                    <li>
+                        <a href="{% url 'carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                        <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="hero-content">
+            <h1>Nuestra Dulce Historia</h1>
+            <p>Conoce el amor y dedicación detrás de cada uno de nuestros postres</p>
+        </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <main class="about-container">
+        <!-- Sección de Historia -->
+        <section class="about-section history-section">
+            <div class="section-content">
+                <div class="text-content">
+                    <h2>Nuestra Historia</h2>
+                    <p>Pastelería Morita es un emprendimiento que surgió el 26 de octubre del 2024 con la ilusión de una estudiante de pastelería de poner a prueba y practicar todo lo que aprendió a lo largo de su carrera.</p>
+                    <p>Al principio empezó realizando postres sencillos y repartiéndolos gratis o a un muy bajo costo entre sus familiares y los vecinos cercanos. Sin embargo, mientras más aprendía, más variedad de tortas y postres mejoraba, por lo que la demanda de estos solo iba en aumento.</p>
+                    <p>Adaptó la cocina de su hogar con todas las herramientas necesarias para poder seguir produciendo distintos postres para la venta, convirtiendo su emprendimiento en un pequeño negocio familiar que llega a vender hasta 120 postres al día.</p>
+                </div>
+                <div class="image-content">
+                    <img src="{% static 'nosotros/images/historia.jpg' %}" alt="Inicios de Pastelería Morita">
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Misión y Visión -->
+        <section class="about-section mission-vision">
+            <div class="mv-container">
+                <div class="mission">
+                    <div class="icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Misión</h3>
+                    <p>Brindar a nuestros clientes una experiencia dulce, artesanal y de alta calidad, ofreciendo postres y tortas frescos, variados y a precios accesibles. Nos enfocamos en mantener una atención cercana y personalizada, combinando la tradición familiar con el aprendizaje constante y el uso de herramientas digitales para mejorar cada día nuestros procesos y productos.</p>
+                </div>
+
+                <div class="vision">
+                    <div class="icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Visión</h3>
+                    <p>Ser reconocidos como una pastelería líder en sabor, calidad y servicio al cliente, expandiendo nuestro negocio familiar hacia un local físico propio que permita seguir creciendo de manera organizada y sostenible. Aspiramos a automatizar procesos claves para dedicar más tiempo a la innovación y al perfeccionamiento de nuestras recetas, sin perder nunca la calidez y el amor con el que nacimos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Valores -->
+        <section class="about-section values-section">
+            <h2>Nuestros Valores</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Pasión</h3>
+                    <p>Amor por lo que hacemos, reflejado en cada detalle de nuestros productos.</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Calidad</h3>
+                    <p>Usamos solo los mejores ingredientes para garantizar excelencia en cada bocado.</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <h3>Tradición</h3>
+                    <p>Recetas artesanales que combinan técnicas tradicionales con toques innovadores.</p>
+                </div>
+
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Familia</h3>
+                    <p>Un negocio familiar donde cada cliente es tratado como parte de nuestra casa.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección del Equipo -->
+        <section class="about-section team-section">
+            <h2>Conoce a Nuestro Equipo</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-photo">
+                        <img src="{% static 'nosotros/images/fundadora.jpg' %}" alt="Fundadora de Morita">
+                    </div>
+                    <div class="team-info">
+                        <h3>Fundadora</h3>
+                        <p class="position">Pastelera Principal</p>
+                        <p class="bio">Apasionada por la repostería desde pequeña, decidió profesionalizar su talento estudiando pastelería. Su dedicación y amor por los detalles son el corazón de Morita.</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="team-photo">
+                        <img src="{% static 'nosotros/images/familia.jpg' %}" alt="Equipo familiar">
+                    </div>
+                    <div class="team-info">
+                        <h3>Familia Morita</h3>
+                        <p class="position">Equipo de Apoyo</p>
+                        <p class="bio">Desde probadores oficiales hasta ayudantes en empaque y entregas, toda la familia contribuye con su granito de harina para hacer de Morita un dulce éxito.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de CTA -->
+        <section class="about-section cta-section">
+            <div class="cta-content">
+                <h2>¿Listo para probar nuestros deliciosos postres?</h2>
+                <p>Descubre por qué nuestros clientes nos prefieren</p>
+                <a href="{% url 'pagProductos'%}"class="btn btn-primary">Ver Productos</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Morita</h3>
+                <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+                <div class="social-icons">
+                <a href="https://www.instagram.com/morita.pasteleria/"><i class="fab fa-instagram"></i></a>
+            </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                    <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                    <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                    <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'nosotros/js/nosotros.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos de configuración del editor
+*.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Archivos de la base de datos (si usas SQLite)
+*.sqlite3
+
+# Archivos de entorno
+.env
+*.env
+
+# Archivos de migración innecesarios
+*/migrations/__pycache__/
+*/migrations/*.pyc
+
+# Archivos compilados
+*.log
+*.pot
+*.mo
+
+# Archivos estáticos recolectados por collectstatic
+/staticfiles/
+/static/
+
+# Archivos subidos por usuarios (media)
+media/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de pruebas
+coverage/
+htmlcov/
+*.cover
+*.py,cover
+.tox/
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.orig
+
+# Render logs (opcional)
+render.yaml

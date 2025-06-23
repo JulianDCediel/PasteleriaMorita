@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Empleados-Panel Administrativo - Morita</title>
+    <link rel="stylesheet" href="{% static 'menu_administracion/menu_admin.css' %}">
+    <link rel="stylesheet" href="{% static 'gestion_empleados/gestion_empleados.css' %}">
+</head>
+<body>
+<div class="admin-panel">
+    <aside>
+        <div class="brand">Morita</div>
+        <nav>
+            <a href="{% url 'prinAdmins'%}">Dashboard</a>
+            <a href="{% url 'gestProductos'%}">Productos</a>
+            <a href="{% url 'gestion_pedidos'%}">Pedidos</a>
+            <a href="{% url 'gestion_finanzas'%}">Finanzas</a>
+            <a class="active" href="{% url 'gestEmpleados'%}">Empleados</a>
+        </nav>
+        <div class="admin-info">
+            <span> <strong>{{ empleado.persona.nombre }} {{ empleado.persona.primer_apellido }}</strong> </span>
+            <span> <strong>{{ empleado.persona.correo}}</strong> </span>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="cerrar-sesion-btn" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </aside>
+    <main>
+        <header>
+
+            <h1>Gestión de Empleados</h1>
+            <ul class="tabs">
+                <li class="active">Lista</li>
+                <li><a href="{% url 'nuevoEmpleado' %}">Agregar</a></li>
+            </ul>
+        </header>
+
+
+        <section>
+            <div class="top-bar">
+                <a href="{% url 'nuevoEmpleado' %}" class="pink-btn">Agregar Empleado</a>
+                <div class="search-container">
+                    <form method="get" action="">
+                        <input type="text" name="q" placeholder="Buscar por nombre" value="{{ request.GET.q }}">
+                        <button type="submit" class="boton-s">Buscar</button>
+                    </form>
+                </div>
+            </div>
+
+            <h3>Lista de empleados</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Primer Apellido</th>
+                    <th>Segundo Apellido</th>
+                    <th>Email</th>
+                    <th>Tipo Empleado</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for emp in empleados %}
+                <tr>
+                    <td>{{ emp.persona.nombre }}</td>
+                    <td>{{ emp.persona.primer_apellido }}</td>
+                    <td>{{ emp.persona.segundo_apellido }}</td>
+                    <td>{{ emp.persona.correo}}</td>
+                    <td>{{ emp.tipo_usuario.tipo }}</td>
+                    <td><a href="editarEmpleado/{{emp.id}}" class="edit-btn">✏️</a></td>
+                    <td><a href="eliminarEmpleado/{{emp.id}}" class="delete-btn">🗑️</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-products">No hay empleados registrados..</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+</body>
+</html>

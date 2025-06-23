@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta - Morita Pastelería</title>
+    <link rel="stylesheet" href="{% static 'web_principal/web_principal.css' %}">
+    <link rel="stylesheet" href="{% static 'historial_pedidos/historial_pedidos.css' %}">
+    <link rel="stylesheet" href="{% static 'historial_pedidos/modal.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">Morita</div>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}"><i class="fas fa-birthday-cake"></i> Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}"><i class="fas fa-address-card"></i> Nosotros</a></li>
+                    <li><a href="{% url 'mi_cuenta' %}" class="active"><i class="fas fa-user"></i> Mi Cuenta</a></li>
+                    <li>
+                        <a href="{% url 'carrito' %}"><i class="fas fa-shopping-cart"></i> Carrito</a>
+                        <span class="cart-count">{{ cart_count|default:"0" }}</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="account-container">
+        <div class="order-history">
+            <h2>📦 Mis Pedidos</h2>
+
+            {% if pedidos %}
+                {% for pedido in pedidos %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <h3>Pedido #{{ pedido.id }}</h3>
+                            <span class="order-status {{ pedido.estado }}">{{ pedido.get_estado_display }}</span>
+                        </div>
+                        <p><strong>Fecha:</strong> {{ pedido.fecha|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Entrega:</strong> {{ pedido.get_metodo_entrega_display }}</p>
+                        <p><strong>Total:</strong> ${{ pedido.total|floatformat:"0" }}</p>
+
+                        <div class="order-items">
+                            <h4>Productos:</h4>
+                            <ul>
+                                {% for detalle in pedido.detalles.all %}
+                                    <li>
+                                        {{ detalle.producto.nombre }} ({{ detalle.presentacion.nombre }})  {{ detalle.nota }}-
+                                        Cant: {{ detalle.cantidad }} -
+                                        Precio unitario: ${{ detalle.precio_unitario|floatformat:"0" }} -
+                                        Subtotal: ${{ detalle.subtotal|floatformat:"0" }}
+                                        <button class="btn-review"
+        onclick="openReviewModal({{ detalle.producto.id }}, '{{ detalle.producto.nombre }}', '{{ detalle.producto.imagen.url }}')">
+    Calificar
+</button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-orders">No tienes pedidos registrados.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Morita</h3>
+                <p>Pastelería artesanal hecha con los mejores ingredientes y mucho amor.</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/morita.pasteleria/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces</h3>
+                <ul>
+                    <li><a href="{% url 'pagPrincipal'%}">Inicio</a></li>
+                    <li><a href="{% url 'pagProductos'%}">Productos</a></li>
+                    <li><a href="{% url 'nosotros'%}">Sobre Nosotros</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Conjunto Santa Maria Del Rincon, Soacha</li>
+                    <li><i class="fas fa-phone"></i> +57 3223523977</li>
+                    <li><i class="fas fa-envelope"></i> sergiobogotag2002@gmail.com</li>
+                    <li><i class="fas fa-clock"></i> Lunes a Domingo: 8am - 8pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 Morita Pastelería. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeReviewModal()">&times;</span>
+
+        <img id="modalProductImage" src="" alt="Producto" class="modal-product-img">
+
+        <div class="modal-review-info">
+            <h3 id="modalProductName">Calificar producto</h3>
+
+            <form method="POST" action="{% url 'crear_review' %}">
+                {% csrf_token %}
+                <input type="hidden" name="producto_id" id="modalProductoId">
+
+                <label for="calificacion">Calificación (1 a 5)</label>
+                <select name="calificacion" id="calificacion" required>
+                    {% for i in "12345" %}
+                        <option value="{{ i }}">{{ i }} ⭐</option>
+                    {% endfor %}
+                </select>
+
+                <label for="comentario">Comentario</label>
+                <textarea name="comentario" id="comentario"></textarea>
+
+                <button type="submit">Enviar Reseña</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script>
+   function openReviewModal(productoId, nombreProducto, imagenUrl) {
+        document.getElementById('modalProductoId').value = productoId;
+        document.getElementById('modalProductName').innerText = nombreProducto;
+        document.getElementById('modalProductImage').src = imagenUrl || "{% static 'img/default-product.jpg' %}";
+        document.getElementById('reviewModal').style.display = 'block';
+    }
+
+    function closeReviewModal() {
+        document.getElementById('reviewModal').style.display = 'none';
+    }
+        // Script para cargar municipios según departamento seleccionado
+        document.getElementById('edit-departamento').addEventListener('change', function () {
+            const departamentoId = this.value;
+            const municipioSelect = document.getElementById('edit-municipio');
+
+            // Limpiar municipios anteriores
+            municipioSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
+
+            if (!departamentoId) return;
+
+            fetch(`/get_municipios/?departamento_id=${departamentoId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.municipios && data.municipios.length > 0) {
+                        data.municipios.forEach(muni => {
+                            const option = document.createElement('option');
+                            option.value = muni.id;
+                            option.textContent = muni.nombre;
+                            municipioSelect.appendChild(option);
+                        });
+                    } else {
+                        console.warn('No se recibieron municipios');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar municipios:', error);
+                    alert('Error al cargar municipios. Por favor recarga la página.');
+                });
+        });
+    </script>
+</body>
+</html>
